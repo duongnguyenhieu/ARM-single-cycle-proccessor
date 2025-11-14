@@ -1,17 +1,34 @@
-module alu(
-  input [31:0] a, b,
-  input [1:0] aluctrl,
-  output reg [31:0] result,
-  output zero
+module alu (
+    input  [31:0] A,      // toán hạng có dấu
+    input  [31:0] B,      // toán hạng có dấu
+    input  [1:0]  ALUControl,
+    output reg  [31:0] Result,
+    output reg         N,    // Negative
+    output reg         Z,    // Zero
+    output reg         C,    // Carry (no borrow)
+    output reg         V     // Overflow (signed)
 );
+     reg [32:0] temp;
   always @(*) begin
-   case(aluctrl)
-    2'b00: result = a + b; // ADD
-    4'b01: result = a - b; // SUB
-    4'b10: result = a & b; // AND
-    4'b11: result = a | b; // OR
-      default: result = 32'b0;
+   case( ALUControl)
+    2'b00: begin
+     temp = {1'b0, A} + {1'b0, B};
+     Result = A+B;
+    end
+    2'b01: begin
+     temp = {1'b0, A} - {1'b0, B};
+     Result = A-B;
+    end
+    2'b10: begin
+     Result = A & B;
+    end
+    2'b11: begin
+     Result = A | B;
+    end
    endcase
+    C = ~ALUControl[1] & temp[32];
+    V =  ~(A[31]^B[31]^ALUControl[0]) & (A[31]^Result[31])&~ALUControl[1];
+    N =  Result[31];
+    Z = (Result==0);
   end
-    assign zero = (result == 0);
 endmodule
