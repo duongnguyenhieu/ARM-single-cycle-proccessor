@@ -64,7 +64,7 @@ module alu_tb;
     aluctrl = 2'b11;
     #10;
     $display("ORR: result=%d zero=%b", result, zero);
-    
+    $display("Project cua Duong Nguyen Hieu");
     $finish;
   end
 endmodule
