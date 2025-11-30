@@ -1,6 +1,6 @@
 module alu (
-    input  [31:0] A,      // toán hạng có dấu
-    input  [31:0] B,      // toán hạng có dấu
+    input  [31:0] A,   
+    input  [31:0] B,    
     input  [1:0]  ALUControl,
     output reg  [31:0] Result,
     output reg         N,    // Negative
