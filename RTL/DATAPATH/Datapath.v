@@ -21,11 +21,14 @@
 
 
 
+`timescale 1ns/1ps
+
 module Datapath(
     input         clk,
     input         PCSrc,
     input         MemtoReg,
     input         MemWrite,
+    input         ALUSrc,
     input  [1:0]  ALUControl,
     input  [1:0]  ImmSrc,
     input         RegWrite,
@@ -115,7 +118,7 @@ module Datapath(
     mux #(.N(32)) muxSrcB (
         .a(RD2),
         .b(ExtImm),
-        .sel(ImmSrc[0]),
+        .sel(ALUSrc),
         .y(SrcB)
     );
 
