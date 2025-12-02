@@ -28,16 +28,17 @@ module top (
     output        V_out
 );
 
-    //  Internal kết nối giữa datapath và control unit
+    // --- Internal wires connecting Control <-> Datapath ---
     wire        PCSrc;
     wire        MemtoReg;
     wire        MemWrite;
     wire [1:0]  ALUControl;
     wire [1:0]  ImmSrc;
     wire        RegWrite;
+    wire        ALUSrc;
     wire [1:0]  RegSrc;
 
-    // Datapath internal 
+    // Datapath internal signals
     wire [31:0] Instr;
     wire [31:0] PC;
     wire [31:0] ALUResult;
@@ -47,17 +48,19 @@ module top (
     wire [31:0] RD1, RD2;
     wire N, Z, C, V;
 
+    // Instruction fields derived from Instr
     wire [3:0]  Cond;
     wire [1:0]  Op;
     wire [5:0]  Funct;
     wire [3:0]  Rd;
 
-    //  Datapath
+    // --- Instantiate Datapath ---
     Datapath datapath_inst (
         .clk(clk),
         .PCSrc(PCSrc),
         .MemtoReg(MemtoReg),
         .MemWrite(MemWrite),
+        .ALUSrc(ALUSrc),
         .ALUControl(ALUControl),
         .ImmSrc(ImmSrc),
         .RegWrite(RegWrite),
@@ -78,12 +81,13 @@ module top (
         .RD2(RD2)
     );
 
+    // --- Decode instruction fields to feed Control_Unit ---
     assign Cond  = Instr[31:28];
     assign Op    = Instr[27:26];
     assign Funct = { Instr[25], Instr[24:21], Instr[20] }; // {I, CMD[3:0], S}
     assign Rd    = Instr[15:12];
 
-    //  Control Unit
+    // --- Instantiate Control Unit ---
     Control_Unit control_inst (
         .clk(clk),
         .Rd(Rd),
@@ -97,9 +101,11 @@ module top (
         .ALUControl(ALUControl),
         .ImmSrc(ImmSrc),
         .RegWrite(RegWrite),
+        .ALUSrc(ALUSrc),
         .RegSrc(RegSrc)
     );
 
+    // --- Expose all internal signals to outputs ---
     assign Instr_out      = Instr;
     assign PC_out         = PC;
     assign ALUResult_out  = ALUResult;
