@@ -33,6 +33,7 @@ module Control_Unit(
    output  [1:0]  ALUControl,
    output  [1:0]  ImmSrc,
    output         RegWrite,
+   output         ALUSrc,
    output  [1:0]  RegSrc
     );
     //Internal
