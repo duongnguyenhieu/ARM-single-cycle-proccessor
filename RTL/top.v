@@ -3,7 +3,6 @@
 module top (
     input  clk,
 
-    // Outputs for testbench / debug
     output [31:0] Instr_out,
     output [31:0] PC_out,
     output [31:0] ALUResult_out,
@@ -28,7 +27,6 @@ module top (
     output        V_out
 );
 
-    // --- Internal wires connecting Control <-> Datapath ---
     wire        PCSrc;
     wire        MemtoReg;
     wire        MemWrite;
@@ -38,7 +36,6 @@ module top (
     wire        ALUSrc;
     wire [1:0]  RegSrc;
 
-    // Datapath internal signals
     wire [31:0] Instr;
     wire [31:0] PC;
     wire [31:0] ALUResult;
@@ -48,13 +45,12 @@ module top (
     wire [31:0] RD1, RD2;
     wire N, Z, C, V;
 
-    // Instruction fields derived from Instr
     wire [3:0]  Cond;
     wire [1:0]  Op;
     wire [5:0]  Funct;
     wire [3:0]  Rd;
 
-    // --- Instantiate Datapath ---
+    // Datapath
     Datapath datapath_inst (
         .clk(clk),
         .PCSrc(PCSrc),
@@ -81,13 +77,12 @@ module top (
         .RD2(RD2)
     );
 
-    // --- Decode instruction fields to feed Control_Unit ---
     assign Cond  = Instr[31:28];
     assign Op    = Instr[27:26];
     assign Funct = { Instr[25], Instr[24:21], Instr[20] }; // {I, CMD[3:0], S}
     assign Rd    = Instr[15:12];
 
-    // --- Instantiate Control Unit ---
+    // Control Unit 
     Control_Unit control_inst (
         .clk(clk),
         .Rd(Rd),
@@ -105,7 +100,6 @@ module top (
         .RegSrc(RegSrc)
     );
 
-    // --- Expose all internal signals to outputs ---
     assign Instr_out      = Instr;
     assign PC_out         = PC;
     assign ALUResult_out  = ALUResult;
