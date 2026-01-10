@@ -82,7 +82,7 @@ module Control_Unit(
     
     Condition_Check cond_check(
         .Cond(Cond),
-        .N(N), .Z(Z), .C(C), .V(V),
+        .N(N_reg), .Z(Z_reg), .C(C_reg), .V(V_reg),
         .CondEx(CondEx)
     );
     
