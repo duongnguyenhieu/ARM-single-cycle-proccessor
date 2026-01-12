@@ -1,8 +1,15 @@
-`timescale 1ns/1ps
+`timescale 1ns / 1ps
+//////////////////////////////////////////////////////////////////////////////////
+// Module Name: top
+// Description: Top level module kết nối Datapath và Control Unit
+//              Có thêm các cổng output *_out để debug trong Simulation
+//////////////////////////////////////////////////////////////////////////////////
 
 module top (
     input  clk,
-
+    input  reset,
+    
+    // --- Debug Outputs (Kết nối ra Testbench) ---
     output [31:0] Instr_out,
     output [31:0] PC_out,
     output [31:0] ALUResult_out,
@@ -13,20 +20,18 @@ module top (
     output [31:0] ExtImm_out,
     output [31:0] RD1_out,
     output [31:0] RD2_out,
-
     output        PCSrc_out,
     output        MemtoReg_out,
     output        MemWrite_out,
-    output        RegWrite_out,
     output [1:0]  ALUControl_out,
     output [1:0]  ImmSrc_out,
+    output        RegWrite_out,
+    output        ALUSrc_out,   // Thêm ALUSrc để quan sát
     output [1:0]  RegSrc_out,
-    output        N_out,
-    output        Z_out,
-    output        C_out,
-    output        V_out
+    output        N_out, Z_out, C_out, V_out
 );
 
+    // --- Internal wires connecting Control <-> Datapath ---
     wire        PCSrc;
     wire        MemtoReg;
     wire        MemWrite;
@@ -36,6 +41,7 @@ module top (
     wire        ALUSrc;
     wire [1:0]  RegSrc;
 
+    // Datapath internal signals
     wire [31:0] Instr;
     wire [31:0] PC;
     wire [31:0] ALUResult;
@@ -45,14 +51,16 @@ module top (
     wire [31:0] RD1, RD2;
     wire N, Z, C, V;
 
+    // Instruction fields derived from Instr
     wire [3:0]  Cond;
     wire [1:0]  Op;
     wire [5:0]  Funct;
     wire [3:0]  Rd;
 
-    // Datapath
+    // --- Instantiate Datapath ---
     Datapath datapath_inst (
         .clk(clk),
+        .reset(reset),
         .PCSrc(PCSrc),
         .MemtoReg(MemtoReg),
         .MemWrite(MemWrite),
@@ -77,14 +85,16 @@ module top (
         .RD2(RD2)
     );
 
+    // --- Decode instruction fields to feed Control_Unit ---
     assign Cond  = Instr[31:28];
     assign Op    = Instr[27:26];
     assign Funct = { Instr[25], Instr[24:21], Instr[20] }; // {I, CMD[3:0], S}
     assign Rd    = Instr[15:12];
 
-    // Control Unit 
+    // --- Instantiate Control Unit ---
     Control_Unit control_inst (
         .clk(clk),
+        .reset(reset),
         .Rd(Rd),
         .Op(Op),
         .Funct(Funct),
@@ -100,6 +110,7 @@ module top (
         .RegSrc(RegSrc)
     );
 
+    // --- Assign Internal Wires to Output Ports ---
     assign Instr_out      = Instr;
     assign PC_out         = PC;
     assign ALUResult_out  = ALUResult;
@@ -110,17 +121,19 @@ module top (
     assign ExtImm_out     = ExtImm;
     assign RD1_out        = RD1;
     assign RD2_out        = RD2;
-
+    
     assign PCSrc_out      = PCSrc;
     assign MemtoReg_out   = MemtoReg;
     assign MemWrite_out   = MemWrite;
-    assign RegWrite_out   = RegWrite;
     assign ALUControl_out = ALUControl;
     assign ImmSrc_out     = ImmSrc;
+    assign RegWrite_out   = RegWrite;
+    assign ALUSrc_out     = ALUSrc;
     assign RegSrc_out     = RegSrc;
-    assign N_out          = N;
-    assign Z_out          = Z;
-    assign C_out          = C;
-    assign V_out          = V;
+    
+    assign N_out = N; 
+    assign Z_out = Z; 
+    assign C_out = C; 
+    assign V_out = V;
 
 endmodule
