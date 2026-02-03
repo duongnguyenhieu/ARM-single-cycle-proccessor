@@ -1,4 +1,4 @@
-module datamem(
+module data_mem(
   input clk,
   input WE,                // Write Enable lấy từ MemWrite của Control Unit
   input [31:0] A,          // Address
