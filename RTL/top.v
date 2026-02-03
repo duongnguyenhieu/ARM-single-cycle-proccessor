@@ -1,30 +1,14 @@
 `timescale 1ns / 1ps
-
+//////////////////////////////////////////////////////////////////////////////////
+// Module Name: top
+// Description: Top level module k?t n?i Datapath và Control Unit
+//              ?ã l??c b? các output debug ?? t?i ?u cho vi?c n?p FPGA
+//////////////////////////////////////////////////////////////////////////////////
 
 module top (
     input  clk,
     input  reset,
-    
-    // --- Debug Outputs (Kết nối ra Testbench) ---
-    output [31:0] Instr_out,
-    output [31:0] PC_out,
-    output [31:0] ALUResult_out,
-    output [31:0] WriteData_out,
-    output [31:0] ReadData_out,
-    output [31:0] SrcA_out,
-    output [31:0] SrcB_out,
-    output [31:0] ExtImm_out,
-    output [31:0] RD1_out,
-    output [31:0] RD2_out,
-    output        PCSrc_out,
-    output        MemtoReg_out,
-    output        MemWrite_out,
-    output [1:0]  ALUControl_out,
-    output [1:0]  ImmSrc_out,
-    output        RegWrite_out,
-    output        ALUSrc_out,   // Thêm ALUSrc để quan sát
-    output [1:0]  RegSrc_out,
-    output        N_out, Z_out, C_out, V_out
+    output [31:0] pc_out // Các chân I/O th?c t? (n?u có) s? thêm ? ?ây, ví d?: output [7:0] led
 );
 
     // --- Internal wires connecting Control <-> Datapath ---
@@ -69,7 +53,7 @@ module top (
         .Instr(Instr),
         .N(N), .Z(Z), .C(C), .V(V),
 
-        // Internal signals exposed for debug
+        // Các tín hi?u n?i b? v?n k?t n?i vào wire ?? dùng cho ILA sau này
         .PC(PC),
         .ALUResult(ALUResult),
         .WriteData(WriteData),
@@ -105,31 +89,6 @@ module top (
         .ALUSrc(ALUSrc),
         .RegSrc(RegSrc)
     );
-
-    // --- Assign Internal Wires to Output Ports ---
-    assign Instr_out      = Instr;
-    assign PC_out         = PC;
-    assign ALUResult_out  = ALUResult;
-    assign WriteData_out  = WriteData;
-    assign ReadData_out   = ReadData;
-    assign SrcA_out       = SrcA;
-    assign SrcB_out       = SrcB;
-    assign ExtImm_out     = ExtImm;
-    assign RD1_out        = RD1;
-    assign RD2_out        = RD2;
-    
-    assign PCSrc_out      = PCSrc;
-    assign MemtoReg_out   = MemtoReg;
-    assign MemWrite_out   = MemWrite;
-    assign ALUControl_out = ALUControl;
-    assign ImmSrc_out     = ImmSrc;
-    assign RegWrite_out   = RegWrite;
-    assign ALUSrc_out     = ALUSrc;
-    assign RegSrc_out     = RegSrc;
-    
-    assign N_out = N; 
-    assign Z_out = Z; 
-    assign C_out = C; 
-    assign V_out = V;
+    assign pc_out = PC;
 
 endmodule
