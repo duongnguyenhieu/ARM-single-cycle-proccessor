@@ -22,6 +22,7 @@
 
 module Control_Unit(
    input clk,
+   input reset,
    input [3:0]Rd,
    input  [1:0] Op,
    input  [5:0] Funct,
@@ -52,18 +53,23 @@ module Control_Unit(
    assign MemWrite = MemW & CondEx;
     
     //Sequential
-    always @(posedge clk) begin
-        // Write N,Z
+    always @(posedge clk or posedge reset) begin
+    if (reset) begin
+        N_reg <= 1'b0;
+        Z_reg <= 1'b0;
+        C_reg <= 1'b0;
+        V_reg <= 1'b0;
+    end else begin
         if (FlagWrite[1]) begin
             N_reg <= N;
             Z_reg <= Z;
         end
-        // Write C,V
         if (FlagWrite[0]) begin
             C_reg <= C;
             V_reg <= V;
         end
     end
+end
     
     Decoder decoder(
         .Rd(Rd),
@@ -73,7 +79,7 @@ module Control_Unit(
         .RegW(RegW),
         .MemW(MemW),
         .MemtoReg(MemtoReg),
-        .AluSr(ALUSrc),
+        .ALUSrc(ALUSrc),
         .ImmSrc(ImmSrc),
         .RegSrc(RegSrc),
         .ALUControl(ALUControl),
