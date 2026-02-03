@@ -1,30 +1,8 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 20.11.2025 11:13:25
-// Design Name: 
-// Module Name: Datapath
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//////////////////////////////////////////////////////////////////////////////////
-
-
-
 `timescale 1ns/1ps
 
 module Datapath(
     input         clk,
+    input         reset,
     input         PCSrc,
     input         MemtoReg,
     input         MemWrite,
@@ -61,8 +39,9 @@ module Datapath(
     reg [31:0] PCReg = 0;
     assign PC = PCReg;
 
-    always @(posedge clk) begin
-        PCReg <= PCNext;
+    always @(posedge clk or posedge reset) begin
+        if(reset) PCReg<=0;
+        else PCReg <= PCNext;
     end
 
     assign PCPlus4 = PC + 32'd4;
