@@ -8,7 +8,6 @@
 module top (
     input  clk,
     input  reset,
-    output [31:0] pc_out // Các chân I/O th?c t? (n?u có) s? thêm ? ?ây, ví d?: output [7:0] led
 );
 
     // --- Internal wires connecting Control <-> Datapath ---
@@ -89,6 +88,5 @@ module top (
         .ALUSrc(ALUSrc),
         .RegSrc(RegSrc)
     );
-    assign pc_out = PC;
 
 endmodule
