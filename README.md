@@ -31,6 +31,35 @@ The processor datapath is designed based on the standard 5-stage execution flow,
 
 5.  **Write Back**:
     * The result (either from the ALU or Data Memory) is written back into the destination register in the Register File.
+  
+Supported Instructions
+The processor currently supports a subset of the ARM instruction set, including:
+
+Data Processing: ADD, SUB, AND, ORR
+
+Memory Access: LDR, STR
+
+Branching: B (Unconditional Branch)
+
+Hardware Debugging with ILA
+To verify the processor's functionality in hardware, the design was synthesized and debugged using the Vivado Integrated Logic Analyzer (ILA) on a Xilinx Zynq UltraScale+ MPSoC platform.
+
+Block Design Setup
+The ARM processor (top_0) was integrated into a Vivado Block Design alongside an AXI Interconnect. A System ILA IP (system_ila_0) was instantiated to monitor critical internal processor signals and AXI bus transactions.
+
+The following probes were connected to the ILA:
+
+probe_pc[31:0]: Program Counter
+
+probe_instr[31:0]: Current fetched instruction
+
+probe_aluresult[31:0]: ALU Output / Calculated memory address
+
+probe_writedata[31:0]: Data to be written to memory
+
+probe_memwrite: Memory Write Enable signal
+
+SLOT_0_AXI: Monitors AXI memory-mapped transactions.
 
 ## Supported Instructions
 The processor currently supports a subset of the ARM instruction set, including:
