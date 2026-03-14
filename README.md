@@ -42,7 +42,7 @@ The ARM processor (`top_0`) was integrated into a Vivado Block Design alongside 
 ### ILA Waveform Results
 The following probes were connected to the ILA to monitor real-time execution, capturing the instruction flow and signal transitions:
 
-![ILA Debug Result](image/ILA_result.png)
+![ILA Debug Result](image/ILA_result.jpg)
 
 * **probe_pc[31:0]**: Program Counter
 * **probe_instr[31:0]**: Current fetched instruction
